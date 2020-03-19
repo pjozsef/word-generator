@@ -2,13 +2,25 @@ package com.github.pjozsef.wordgenerator.rule
 
 import java.util.*
 
-class SubstitutionRule : Rule {
+class SubstitutionRule(
+    prefix: String = "#"
+) : Rule {
+
+    private val _regex: Regex = Regex("$prefix\\{([\\w+\\s]+)}")
+
+    override val regex: Regex
+        get() = _regex
+
     override fun evaluate(
         rule: String,
         mappings: Map<String, List<String>>,
         random: Random
     ): String {
-        return rule.split("+").flatMap {
+        return rule.split("+").map {
+            it.replace(Regex("\\s+"), "")
+        }.filter {
+            it.isNotBlank()
+        }.flatMap {
             mappings.getValue(it)
         }.let {
             it[random.nextInt(it.size)]

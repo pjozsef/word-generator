@@ -12,6 +12,34 @@ import io.kotlintest.tables.row
 import java.util.Random
 
 class SubstitutionRuleTest : FreeSpec({
+    "regex" - {
+        forall(
+            row(
+                "with default prefix",
+                "#{rule}",
+                SubstitutionRule()
+            ),
+            row(
+                "with custom prefix",
+                "custom prefix{rule}",
+                SubstitutionRule("custom prefix")
+            ),
+            row(
+                "with multiple rules",
+                "custom prefix{rule1+rule2+rule3}",
+                SubstitutionRule("custom prefix")
+            ),
+            row(
+                "with multiple rules with whitespace",
+                "custom prefix{rule1+ rule2 + rule3}",
+                SubstitutionRule("custom prefix")
+            )
+        ) { test, input, rule ->
+            test {
+                rule.regex.matches(input) shouldBe true
+            }
+        }
+    }
     "evaluate" - {
         val mappings = mapOf(
             "a" to listOf("x"),
@@ -35,6 +63,18 @@ class SubstitutionRuleTest : FreeSpec({
             row(
                 "substitution chosen from a composite rule",
                 "a+b",
+                "y",
+                listOf(1)
+            ),
+            row(
+                "substitution chosen from a composite rule with whitespace",
+                "a+b",
+                "y",
+                listOf(1)
+            ),
+            row(
+                "ignores degenerate input",
+                " a + b+++   \t  +",
                 "y",
                 listOf(1)
             )

@@ -1,8 +1,10 @@
 package com.github.pjozsef.wordgenerator
 
 import com.github.pjozsef.wordgenerator.rule.SubstitutionRule
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturnConsecutively
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.whenever
 import io.kotlintest.IsolationMode
 import io.kotlintest.data.suspend.forall
 import io.kotlintest.shouldBe
@@ -13,77 +15,81 @@ import java.util.Random
 class WordGeneratorKtTest : FreeSpec({
     "generateWord" - {
         val random = mock<Random>()
-        val mappings = mapOf<String, List<String>>()
+        val mappings = mapOf(
+            "a" to listOf("x"),
+            "b" to listOf("y"),
+            "multipleOptions" to listOf("0", "1", "2", "3")
+        )
 
         "returns expression as is if it does not contain any rules" {
             generateWord(
                 "string constant",
                 mappings,
                 random,
-                SubstitutionRule(),
-                "#"
+                SubstitutionRule()
             ) shouldBe "string constant"
         }
 
         "Substitution" - {
-            val substitutionRule = mock<SubstitutionRule> {
-                on { evaluate("a", mappings, random) } doReturnConsecutively listOf("x")
-                on { evaluate("b", mappings, random) } doReturnConsecutively listOf("y")
-                on { evaluate("a+b", mappings, random) } doReturnConsecutively listOf("x", "y")
-                on { evaluate("multipleOptions", mappings, random) } doReturnConsecutively listOf("0", "1", "2")
-            }
 
             forall(
                 row(
                     "Substitution:substitutes rule to corresponding value",
                     "#{a}",
                     "x",
-                    "#"
+                    "#",
+                    listOf(0)
                 ),
                 row(
                     "multiple substitutions",
                     "#{a}#{b}",
                     "xy",
-                    "#"
+                    "#",
+                    listOf(0)
                 ),
                 row(
                     "multiple substitutions with constant values in between",
                     "#{a} - #{b}",
                     "x - y",
-                    "#"
+                    "#",
+                    listOf(0)
                 ),
                 row(
                     "rule can be anywhere in the expression",
                     "prefix#{a}",
                     "prefixx",
-                    "#"
+                    "#",
+                    listOf(0)
                 ),
                 row(
                     "rule prefix can be changed",
                     "_!{a}#{notRule}",
                     "_x#{notRule}",
-                    "!"
+                    "!",
+                    listOf(0)
                 ),
                 row(
                     "rule prefix can be longer than 1 character",
                     "longprefix{a}",
                     "x",
-                    "longprefix"
+                    "longprefix",
+                    listOf(0)
                 ),
                 row(
                     "substitution chosen from a composite rule",
                     "#{a+b}#{a+b}",
                     "xy",
-                    "#"
+                    "#",
+                    listOf(0, 1)
                 )
-            ) { test, input, expected, rulePrefix ->
+            ) { test, input, expected, rulePrefix, randomIndices ->
                 test {
+                    whenever(random.nextInt(any())).doReturnConsecutively(randomIndices)
                     generateWord(
                         input,
                         mappings,
                         random,
-                        substitutionRule,
-                        rulePrefix
+                        SubstitutionRule(rulePrefix)
                     ) shouldBe expected
                 }
             }
