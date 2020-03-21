@@ -1,7 +1,7 @@
 package com.github.pjozsef.wordgenerator.rule
 
 import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.doReturnConsecutively
+import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import io.kotlintest.IsolationMode
@@ -52,35 +52,35 @@ class SubstitutionRuleTest : FreeSpec({
                 "returns corresponding value",
                 "a",
                 "x",
-                listOf(0)
+                0
             ),
             row(
                 "returns randomly chosen value",
                 "multipleOptions",
                 "3",
-                listOf(3)
+                3
             ),
             row(
                 "substitution chosen from a composite rule",
                 "a+b",
                 "y",
-                listOf(1)
+                1
             ),
             row(
                 "substitution chosen from a composite rule with whitespace",
-                "a+b",
+                "a + b",
                 "y",
-                listOf(1)
+                1
             ),
             row(
                 "ignores degenerate input",
                 " a + b+++   \t  +",
                 "y",
-                listOf(1)
+                1
             )
-        ) { test, rule, expected, randomIndices ->
+        ) { test, rule, expected, randomIndex ->
             test {
-                whenever(random.nextInt(any())).doReturnConsecutively(randomIndices)
+                whenever(random.nextInt(any())).doReturn(randomIndex)
                 SubstitutionRule().evaluate(
                     rule, mappings, random
                 ) shouldBe expected
