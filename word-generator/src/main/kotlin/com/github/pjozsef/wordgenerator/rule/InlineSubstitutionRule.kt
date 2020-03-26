@@ -5,7 +5,7 @@ import java.util.Random
 class InlineSubstitutionRule(
     prefix: String = "#"
 ) : Rule {
-    private val _regex: Regex = Regex("$prefix\\{([\\w|\\s]+)}")
+    private val _regex: Regex = Regex("$prefix\\{([\\w\\s]+\\|[\\w|\\s]+)}")
 
     override val regex = _regex
 

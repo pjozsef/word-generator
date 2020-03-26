@@ -15,19 +15,14 @@ internal class InlineSubstitutionRuleTest : FreeSpec({
     "regex" - {
         forall(
             row(
-                "with default prefix",
-                "#{rule}",
+                "with multiple inline rules",
+                "#{rule1|rule2|rule3}",
                 InlineSubstitutionRule()
             ),
             row(
                 "with custom prefix",
-                "custom prefix{rule}",
+                "custom prefix{rule1|rule2|rule3}",
                 InlineSubstitutionRule("custom prefix")
-            ),
-            row(
-                "with multiple inline rules",
-                "#{rule1|rule2|rule3}",
-                InlineSubstitutionRule()
             ),
             row(
                 "with multiple rules with whitespace",
@@ -38,6 +33,10 @@ internal class InlineSubstitutionRuleTest : FreeSpec({
             test {
                 rule.regex.matches(input) shouldBe true
             }
+        }
+
+        "should not match single value rule" {
+            InlineSubstitutionRule().regex.matches("#{rule}") shouldBe false
         }
     }
     "evaluate" - {
