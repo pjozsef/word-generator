@@ -2,6 +2,7 @@ package com.github.pjozsef.wordgenerator
 
 import com.github.pjozsef.wordgenerator.rule.InlineSubstitutionRule
 import com.github.pjozsef.wordgenerator.rule.MarkovRule
+import com.github.pjozsef.wordgenerator.rule.ReferenceRule
 import com.github.pjozsef.wordgenerator.rule.SubstitutionRule
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturnConsecutively
@@ -10,8 +11,11 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.kotlintest.IsolationMode
 import io.kotlintest.data.suspend.forall
 import io.kotlintest.shouldBe
+import io.kotlintest.shouldThrow
 import io.kotlintest.specs.FreeSpec
 import io.kotlintest.tables.row
+import java.lang.IllegalStateException
+import java.time.Duration
 import java.util.Random
 
 class WordGeneratorKtTest : FreeSpec({
@@ -96,7 +100,7 @@ class WordGeneratorKtTest : FreeSpec({
                 }
             }
         }
-        "multiple rules" {
+        "multiple rules with recursion" {
             val substitution = mock<SubstitutionRule> {
                 on { evaluate("a", mappings, random) }.thenReturn("substitution")
                 on { regex }.thenReturn(SubstitutionRule().regex)
@@ -106,18 +110,38 @@ class WordGeneratorKtTest : FreeSpec({
                 on { regex }.thenReturn(InlineSubstitutionRule().regex)
             }
             val markov = mock<MarkovRule> {
-                on { evaluate("markov#2, 4-5", mappings, random) }.thenReturn("markov")
+                on { evaluate("markov#2, 4-5", mappings, random) }.thenReturn("markov1")
+                on { evaluate("markov3#10", mappings, random) }.thenReturn("markov2")
                 on { regex }.thenReturn(MarkovRule().regex)
+            }
+            val reference = mock<ReferenceRule> {
+                on { evaluate("ref1", mappings, random) }.thenReturn("*{markov3#10}")
+                on { evaluate("ref2", mappings, random) }.thenReturn(":{ref3}")
+                on { evaluate("ref3", mappings, random) }.thenReturn("deepreference")
+                on { regex }.thenReturn(ReferenceRule().regex)
             }
 
             val actual = generateWord(
-                "#{b|c|d}_*{markov#2, 4-5}_#{a}",
+                ":{ref1}_#{b|c|d}_*{markov#2, 4-5}_#{a}__:{ref2}",
                 mappings,
                 random,
-                listOf(substitution, inlineSubstitution, markov)
+                listOf(substitution, inlineSubstitution, markov, reference)
             )
 
-            actual shouldBe "inlineSubstitution_markov_substitution"
+            actual shouldBe "markov2_inlineSubstitution_markov1_substitution__deepreference"
+        }
+
+        "recursion with infinit loop times out".config(timeout = Duration.ofSeconds(1)) {
+            val mappings = mapOf(
+                "refs" to listOf(
+                    "ref1=:{ref2}",
+                    "ref2=:{ref3}",
+                    "ref3=:{ref1}"
+                )
+            )
+            shouldThrow<IllegalStateException> {
+                generateWord(":{ref1}", mappings, mock(), listOf(ReferenceRule()))
+            }.message shouldBe "Reached maximum depth of recursion: 100"
         }
     }
 }) {
