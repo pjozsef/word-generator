@@ -1,0 +1,25 @@
+apply plugin: "com.github.johnrengelman.shadow"
+
+jar {
+    manifest {
+        attributes 'Main-Class': "com.github.pjozsef.wordgenerator.cli.Main"
+    }
+}
+
+repositories {
+    maven {
+        url  "https://dl.bintray.com/pjozsef/libs"
+    }
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    implementation "com.github.ajalt:clikt:2.2.0"
+    implementation 'com.github.pjozsef:random-tree:1.1.0'
+    implementation project(":word-generator")
+
+    runtime "org.slf4j:slf4j-jdk14:1.8.0-beta4"
+
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0"
+    testImplementation "io.kotlintest:kotlintest-runner-junit5:3.3.2"
+}

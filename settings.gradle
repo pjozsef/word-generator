@@ -1,3 +1,4 @@
 rootProject.name = 'word-generator-project'
 
 include ':word-generator'
+include ':word-generator-cli'

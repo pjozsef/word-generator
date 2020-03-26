@@ -24,7 +24,7 @@ class MarkovRule(
             val order = it.groups["order"]?.value?.toInt() ?: 1
             val markovChain = getMarkovChain(it, order, mappings, random)
             val constraints = it.groups["constraints"]?.value?.let(::parseConstraint) ?: Constraints()
-            markovChain.generate(order, 1, constraints).chooseRandom(random) ?: "###no-result###"
+            markovChain.generate(order, 1, constraints).chooseRandom(random)
         } ?: error("Unparsable rule: $rule")
     }
 
