@@ -111,13 +111,13 @@ class WordGeneratorKtTest : FreeSpec({
             }
 
             val actual = generateWord(
-                "#{a}_#{b|c|d}_*{markov#2, 4-5}",
+                "#{b|c|d}_*{markov#2, 4-5}_#{a}",
                 mappings,
                 random,
                 listOf(substitution, inlineSubstitution, markov)
             )
 
-            actual shouldBe "substitution_inlineSubstitution_markov"
+            actual shouldBe "inlineSubstitution_markov_substitution"
         }
     }
 }) {
