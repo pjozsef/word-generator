@@ -1,3 +1,8 @@
+version = parent.version
+group = parent.group
+
+apply from: "$rootDir/release.gradle"
+
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     implementation 'com.github.pjozsef:markov-chain:1.1.1'
