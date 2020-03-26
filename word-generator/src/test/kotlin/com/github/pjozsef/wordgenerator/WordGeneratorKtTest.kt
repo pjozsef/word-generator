@@ -1,5 +1,7 @@
 package com.github.pjozsef.wordgenerator
 
+import com.github.pjozsef.wordgenerator.rule.InlineSubstitutionRule
+import com.github.pjozsef.wordgenerator.rule.MarkovRule
 import com.github.pjozsef.wordgenerator.rule.SubstitutionRule
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturnConsecutively
@@ -26,7 +28,7 @@ class WordGeneratorKtTest : FreeSpec({
                 "string constant",
                 mappings,
                 random,
-                SubstitutionRule()
+                listOf(SubstitutionRule())
             ) shouldBe "string constant"
         }
 
@@ -89,10 +91,33 @@ class WordGeneratorKtTest : FreeSpec({
                         input,
                         mappings,
                         random,
-                        SubstitutionRule(rulePrefix)
+                        listOf(SubstitutionRule(rulePrefix))
                     ) shouldBe expected
                 }
             }
+        }
+        "multiple rules" {
+            val substitution = mock<SubstitutionRule> {
+                on { evaluate("a", mappings, random) }.thenReturn("substitution")
+                on { regex }.thenReturn(SubstitutionRule().regex)
+            }
+            val inlineSubstitution = mock<InlineSubstitutionRule> {
+                on { evaluate("b|c|d", mappings, random) }.thenReturn("inlineSubstitution")
+                on { regex }.thenReturn(InlineSubstitutionRule().regex)
+            }
+            val markov = mock<MarkovRule> {
+                on { evaluate("markov#2, 4-5", mappings, random) }.thenReturn("markov")
+                on { regex }.thenReturn(MarkovRule().regex)
+            }
+
+            val actual = generateWord(
+                "#{a}_#{b|c|d}_*{markov#2, 4-5}",
+                mappings,
+                random,
+                listOf(substitution, inlineSubstitution, markov)
+            )
+
+            actual shouldBe "substitution_inlineSubstitution_markov"
         }
     }
 }) {
