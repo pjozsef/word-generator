@@ -14,8 +14,10 @@ class ReferenceRule(
 
     override fun evaluate(rule: String, mappings: Map<String, List<String>>, random: Random): String {
         val prefix = "$rule="
-        return mappings.getValue(refsKey).find { it.startsWith(prefix) }?.let {
-            it.drop(prefix.length)
-        } ?: error("Could not find reference: $rule")
+        return mappings.getValue(refsKey)
+            .find {
+                it.startsWith(prefix)
+            }?.drop(prefix.length)
+            ?: error("Could not find reference: $rule")
     }
 }
