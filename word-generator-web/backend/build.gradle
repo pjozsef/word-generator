@@ -1,16 +1,29 @@
 apply plugin: "com.github.johnrengelman.shadow"
+apply plugin: 'kotlin-kapt'
 
 jar {
     manifest {
-        attributes 'Main-Class': "com.github.pjozsef.wordgenerator.cli.Main"
+        attributes 'Main-Class': "com.github.pjozsef.wordgenerator.web.MainKt"
     }
 }
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    implementation "com.github.ajalt:clikt:2.2.0"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:1.3.71"
+
+    implementation "io.ktor:ktor-server-core:1.3.2"
+    implementation "io.ktor:ktor-server-netty:1.3.2"
+    implementation 'com.github.cs125-illinois:ktor-moshi:7252ca49ed'
     implementation 'com.github.pjozsef:random-tree:1.1.0'
     implementation project(":word-generator")
+
+
+    implementation "com.squareup.moshi:moshi-adapters:1.8.0"
+    implementation "com.squareup.moshi:moshi:1.8.0"
+    implementation "com.squareup.moshi:moshi-kotlin:1.8.0"
+    implementation "com.squareup.moshi:moshi-kotlin-codegen:1.8.0"
+
+    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.8.0'
 
     runtime "org.slf4j:slf4j-jdk14:1.8.0-beta4"
 
