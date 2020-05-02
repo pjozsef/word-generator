@@ -4,10 +4,10 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class GenerateWordDto(
-    val command: String,
+    val expression: String,
     val mappings: Map<String, List<String>>,
     val times: Int = 1,
-    val category: String? = null,
+    val rootExpression: String? = null,
     val seed: String = random()
 )
 

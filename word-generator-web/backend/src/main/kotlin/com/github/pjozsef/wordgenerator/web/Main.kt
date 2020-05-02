@@ -20,13 +20,13 @@ import kotlin.time.measureTimedValue
 
 @OptIn(ExperimentalTime::class)
 fun main() {
-    val server = embeddedServer(Netty, System.getProperty("server.port","8080").toInt()) {
+    val server = embeddedServer(Netty, System.getProperty("server.port", "8080").toInt()) {
         routing {
             post("/api/generate") {
                 val dto = call.receive<GenerateWordDto>()
 
                 val results = generate(dto).also {
-                    log.info("Word generation of ${dto.times} word${if(dto.times>1) "s" else ""} took ${it.duration.toLongMilliseconds()} millis.")
+                    log.info("Word generation of ${dto.times} word${if (dto.times > 1) "s" else ""} took ${it.duration.toLongMilliseconds()} millis.")
                 }.value
 
                 call.respond(GenerateWordResponseDto(results, dto.seed))
@@ -55,11 +55,11 @@ private fun generate(dto: GenerateWordDto) = with(dto) {
     }
 }
 
-private fun expression(dto: GenerateWordDto, random: Random) = dto.category?.let {
+private fun expression(dto: GenerateWordDto, random: Random) = dto.rootExpression?.let { root ->
     readTreeFromString(
-        dto.command.replace("\t", "  "),
+        dto.expression.replace("\t", "  "),
         { it },
         { it.toSortedMap().values.joinToString(" ") },
         random
-    ).getValue(it).value
-} ?: dto.command
+    ).getValue(root).value
+} ?: dto.expression
