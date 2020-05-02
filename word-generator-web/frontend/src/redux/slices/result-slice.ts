@@ -1,11 +1,19 @@
-import {createSlice } from '@reduxjs/toolkit'
+import {createSlice, PayloadAction } from '@reduxjs/toolkit'
+
+type ResultState = {
+  result: string[],
+  history: string[]
+}
 
 const {actions, reducer} = createSlice({
     name: 'result',
-    initialState: [],
+    initialState: {result: [], history: []} as ResultState,
     reducers: {
-      newResult(state, action) {
-        return action.payload
+      newResult(state, action: PayloadAction<string[]>) {
+        return {
+          result: action.payload,
+          history: [...state.result, ...state.history]
+        }
       }
     }
   })
