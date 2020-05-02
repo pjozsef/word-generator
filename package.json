@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "install": "yarn --cwd word-generator-web/frontend/ install --dev",
+    "install": "yarn --cwd word-generator-web/frontend/ install --dev && yarn --cwd word-generator-web/frontend/server install",
     "start": "yarn --cwd word-generator-web/frontend/server start",
     "build": "yarn --cwd word-generator-web/frontend/ build",
     "test": "yarn --cwd word-generator-web/frontend/ test"

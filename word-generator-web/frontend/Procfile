@@ -1,1 +1,1 @@
-web: yarn --cwd word-generator-web/frontend/ start
+web: yarn start
