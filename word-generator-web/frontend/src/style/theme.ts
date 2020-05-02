@@ -9,7 +9,7 @@ import {
           main: "#30475e"
       },
       secondary: {
-        main: "#f2a365"
+        main: "#23b39a"
       },
       error: {
         main: "#B00020"
