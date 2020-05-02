@@ -1,1 +1,1 @@
-web: java -Dserver.port=$PORT $JAVA_OPTS -jar word-generator-web/backend/build/libs/mood-graph-0.0.1-SNAPSHOT.jar
+web: java -Dserver.port=$PORT $JAVA_OPTS -jar build/libs/mood-graph-0.0.1-SNAPSHOT.jar
