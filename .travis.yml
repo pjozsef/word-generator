@@ -14,13 +14,17 @@ before_script:
 
 jobs:
   include:
-    - stage: compile
+    - stage: compile 🔨
+      name: gradle build
       script: "./gradlew build -x test"
-    - script: "yarn --cwd word-generator-web/frontend/ build"
-    - stage: test
+    - name: yarn build
+      script: "yarn --cwd word-generator-web/frontend/ build"
+    - stage: test 🔍
+      name: gradle test
       script: "./gradlew test"
+    - name: yarn test
     - script: "yarn --cwd word-generator-web/frontend/ test"
-    - stage: release
+    - stage: release 💎🔮
       script: "./gradlew bintrayUpload"
       if: tag is present
 
