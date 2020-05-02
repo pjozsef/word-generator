@@ -1,7 +1,6 @@
 const path = require('path');
 const express = require('express');
-const httpProxy = require('http-proxy');
-const apiProxy = httpProxy.createProxyServer();
+const { createProxyMiddleware } = require('http-proxy-middleware');
 const app = express();
 const publicPath = path.join(__dirname, '..', 'build');
 
@@ -10,9 +9,7 @@ app.use(express.static(publicPath));
 const port = process.env.PORT || 8008;
 const apiUrl = process.env.API_URL || 'http://localhost:8080';
 
-app.all('/api/*', (req, res)=> {
-    apiProxy.web(req, res, {target: apiUrl});
-})
+app.use('/api', createProxyMiddleware({ target: apiUrl, changeOrigin: true }));
 
 app.get('/*', (req, res) => {
     res.sendFile(path.join(publicPath, 'index.html'));
