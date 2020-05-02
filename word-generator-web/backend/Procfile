@@ -1,1 +1,1 @@
-web: java -Dserver.port=$PORT $JAVA_OPTS -jar word-generator-web/backend/build/libs/backend.jar
+web: java -Dserver.port=$PORT $JAVA_OPTS -jar word-generator-web/backend/build/libs/backend-all.jar

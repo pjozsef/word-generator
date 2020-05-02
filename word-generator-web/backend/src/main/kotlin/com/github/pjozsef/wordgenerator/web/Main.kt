@@ -20,7 +20,7 @@ import kotlin.time.measureTimedValue
 
 @OptIn(ExperimentalTime::class)
 fun main() {
-    val server = embeddedServer(Netty, 8080) {
+    val server = embeddedServer(Netty, System.getProperty("server.port","8080").toInt()) {
         routing {
             post("/api/generate") {
                 val dto = call.receive<GenerateWordDto>()
