@@ -1,4 +1,4 @@
-import React, { Dispatch } from 'react';
+import React from 'react';
 import { connect } from 'react-redux'
 import './app.css';
 import { updateCommand } from '../redux/slices/command-slice';
@@ -7,7 +7,6 @@ import Header from './header';
 import Main from './main';
 import Footer from './footer';
 import generateWord from '../redux/async/generateWord'
-import store from '../redux/store';
 
 type MappedProps = AppState
 type MappedDispatch = {
