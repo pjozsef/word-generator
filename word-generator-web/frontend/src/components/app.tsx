@@ -15,7 +15,7 @@ type MappedDispatch = {
 }
 type Props = MappedProps & MappedDispatch
 
-function App(props: Props) {
+export function App(props: Props) {
   const { command, onType, generateWord } = props
   return (
     <div className="app">
