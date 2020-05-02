@@ -3,3 +3,4 @@
 build
 .kotlintest
 out
+.DS_Store
