@@ -2,11 +2,6 @@
   "name": "word-generator-frontend",
   "version": "0.1.0",
   "private": true,
-  "engines": {
-    "node": "10.16.3",
-    "npm": "6.9.0",
-    "yarn": "1.19.2"
-  },
   "dependencies": {
     "@iconify/types": "^1.0.2",
     "@material-ui/core": "^4.9.12",

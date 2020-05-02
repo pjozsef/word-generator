@@ -6,5 +6,10 @@
     "start": "yarn --cwd word-generator-web/frontend/ start",
     "build": "yarn --cwd word-generator-web/frontend/ build",
     "test": "yarn --cwd word-generator-web/frontend/ test"
+  },
+  "engines": {
+    "node": "10.16.3",
+    "npm": "6.9.0",
+    "yarn": "1.19.2"
   }
 }
