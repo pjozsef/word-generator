@@ -40,4 +40,4 @@ allprojects {
     }
 }
 
-task stage(dependsOn: ['shadowJar'])
+task stage(dependsOn: [':word-generator-web:backend:shadowJar'])
