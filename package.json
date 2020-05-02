@@ -1,0 +1,10 @@
+{
+  "name": "web-fe",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "yarn --cwd word-generator-web/frontend/ start",
+    "build": "yarn --cwd word-generator-web/frontend/ build",
+    "test": "yarn --cwd word-generator-web/frontend/ test"
+  }
+}
