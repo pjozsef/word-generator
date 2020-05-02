@@ -9,31 +9,39 @@ env:
 before_install:
   - nvm install $NODE_VERSION
 
-addons:
-  apt:
-    sources:
-      - heroku
-    packages:
-      - heroku-toolbelt
-
 before_script:
   - "yarn --cwd word-generator-web/frontend/ install"
 
 jobs:
   include:
-    - stage: compile 🔨
+    - stage: compile
       name: gradle build
       script: "./gradlew build -x test"
     - name: yarn build
       script: "yarn --cwd word-generator-web/frontend/ build"
-    - stage: test 🔍
+    - stage: test
       name: gradle test
       script: "./gradlew test"
     - name: yarn test
     - script: "yarn --cwd word-generator-web/frontend/ test"
-    - stage: release 💎🔮
+    - stage: release
+      name: "bintray"
       script: "./gradlew bintrayUpload"
       if: tag is present
+    - script: skip
+      name: heroku backend
+      deploy:
+        provider: heroku
+        app: word-gen-be
+        api_key:
+          secure: B34i4bo/mzNs9mNIF0CzTzODoMTMI4bMnDdoH4Z+J1+86s59Vjbhn5HW7pX+HEojHa3iMs8xor71MGhNLW7P6SuJ5XgNQvebvoU1TiG06wUQDOzf0bdpxzS7Igp7nRyowSYMV/IsgoJKU00v+1yKAQzChVKsY2eTbrgD5rUkoH15UO/amT6cReKi3TPCjiNt8tnP2LEDc7mdmuPMsJL3EsCgkvGJVPv2HxebCRrtcqHL0o62EvvzzRDL8jE1nDmdAHwsdIkL0FFjBbOqSgXNKz1v2gAie9E0a9UaRtROExuVw4vK4z1yhAaPq3nAiAx/BBRq6ap5k2ZGDwQ7RUH8fq33Md2unuM5mA5cQL+rHSAc6XXhLhBEPtkLorEnU5V8L6nVmzajl/BvaAyS1zoSWH7fpm0rHk6a96Ho65NsA2yznQAhJ2SodGWusCxTfQfCuDff1QzN+9eReZXHDQ+UkgMg4vZ+R5d1NaWC+BPifGiiY/gFEqodw+FfgpxC9j5pDghv6ywKbWpodUnWXgKdQP9nHljgbBmA3buk6Jv8Og2P5r5sAc4mXTvYYYyzW80WLNoFFAGvSNblLONpgEF5sfPyS0ramFWLy7cz0x5dIX9qd0dPm9vxqAqgYtf2o1VGHM3zvSCG0r/23fTpYiK+STd8J6GoaQIK+v1AkXZSSRA=
+    - script: skip
+      name: heroku frontend
+      deploy:
+        provider: heroku
+        app: word-gen-fe
+        api_key:
+          secure: B34i4bo/mzNs9mNIF0CzTzODoMTMI4bMnDdoH4Z+J1+86s59Vjbhn5HW7pX+HEojHa3iMs8xor71MGhNLW7P6SuJ5XgNQvebvoU1TiG06wUQDOzf0bdpxzS7Igp7nRyowSYMV/IsgoJKU00v+1yKAQzChVKsY2eTbrgD5rUkoH15UO/amT6cReKi3TPCjiNt8tnP2LEDc7mdmuPMsJL3EsCgkvGJVPv2HxebCRrtcqHL0o62EvvzzRDL8jE1nDmdAHwsdIkL0FFjBbOqSgXNKz1v2gAie9E0a9UaRtROExuVw4vK4z1yhAaPq3nAiAx/BBRq6ap5k2ZGDwQ7RUH8fq33Md2unuM5mA5cQL+rHSAc6XXhLhBEPtkLorEnU5V8L6nVmzajl/BvaAyS1zoSWH7fpm0rHk6a96Ho65NsA2yznQAhJ2SodGWusCxTfQfCuDff1QzN+9eReZXHDQ+UkgMg4vZ+R5d1NaWC+BPifGiiY/gFEqodw+FfgpxC9j5pDghv6ywKbWpodUnWXgKdQP9nHljgbBmA3buk6Jv8Og2P5r5sAc4mXTvYYYyzW80WLNoFFAGvSNblLONpgEF5sfPyS0ramFWLy7cz0x5dIX9qd0dPm9vxqAqgYtf2o1VGHM3zvSCG0r/23fTpYiK+STd8J6GoaQIK+v1AkXZSSRA=
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
