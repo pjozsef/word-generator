@@ -3,12 +3,23 @@ language: java
 jdk:
   - openjdk11
 
+env:
+  - NODE_VERSION="10.16.3"
+
+before_install:
+  - nvm install $NODE_VERSION
+
+before_script:
+  - "yarn --cwd word-generator-web/frontend/ install"
+
 jobs:
   include:
     - stage: compile
       script: "./gradlew build -x test"
+    - script: "yarn --cwd word-generator-web/frontend/ build"
     - stage: test
       script: "./gradlew test"
+    - script: "yarn --cwd word-generator-web/frontend/ test"
     - stage: release
       script: "./gradlew bintrayUpload"
       if: tag is present
@@ -21,3 +32,4 @@ cache:
   directories:
     - "$HOME/.gradle/caches/"
     - "$HOME/.gradle/wrapper/"
+    - "$HOME/.cache/yarn"
