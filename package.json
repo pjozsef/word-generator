@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "install": "yarn --cwd word-generator-web/frontend/ install --dev",
-    "start": "yarn --cwd word-generator-web/frontend/ start",
+    "start": "yarn --cwd word-generator-web/frontend/server start",
     "build": "yarn --cwd word-generator-web/frontend/ build",
     "test": "yarn --cwd word-generator-web/frontend/ test"
   },
