@@ -7,6 +7,7 @@ import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.application.log
+import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
 import io.ktor.request.receive
 import io.ktor.response.respond
@@ -14,6 +15,7 @@ import io.ktor.routing.post
 import io.ktor.routing.routing
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
+import org.slf4j.event.Level
 import java.util.*
 import kotlin.time.ExperimentalTime
 import kotlin.time.measureTimedValue
@@ -36,6 +38,9 @@ fun main() {
             moshi {
                 add(Date::class.java, Rfc3339DateJsonAdapter())
             }
+        }
+        install(CallLogging){
+            level = Level.INFO
         }
     }
     server.start(wait = true)
