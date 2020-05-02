@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@material-ui/core": "^4.9.8",
+    "@iconify/types": "^1.0.2",
+    "@material-ui/core": "^4.9.12",
     "@reduxjs/toolkit": "^1.3.2",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
@@ -15,12 +16,17 @@
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
     "@types/react-redux": "^7.1.7",
+    "@types/redux-persist": "^4.3.1",
+    "@types/redux-thunk": "^2.1.0",
+    "jss": "^10.1.1",
     "lodash": "^4.17.15",
     "react": "^16.13.1",
     "react-debounce-input": "^3.2.2",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.0",
     "react-scripts": "3.4.1",
+    "redux-persist": "^6.0.0",
+    "redux-thunk": "^2.3.0",
     "typescript": "~3.7.2"
   },
   "scripts": {
@@ -43,5 +49,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@iconify/icons-ant-design": "^1.0.8",
+    "@iconify/react": "^1.1.3"
   }
 }

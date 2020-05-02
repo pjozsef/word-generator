@@ -1,0 +1,25 @@
+@import "../style/constants.css";
+
+#footer {
+  background-color: var(--primary-dark);
+  color: var(--on-primary);
+  position: relative;
+}
+
+#footer a {
+  transform: translate(0%, 50%);
+  float: right;
+  margin: 0 5vw 0 0;
+  text-decoration: none;
+  color: inherit;
+}
+
+#footer a:hover {
+  color: var(--secondary-light);
+  text-decoration: underline;
+}
+
+#footer a:active {
+  color: var(--secondary);
+  text-decoration: underline;
+}

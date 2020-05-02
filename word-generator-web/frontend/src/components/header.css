@@ -1,0 +1,35 @@
+@import "../style/constants.css";
+
+#header {
+  background-color: var(--primary);
+  color: var(--on-primary);
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-around;
+  align-items: stretch;
+}
+
+#header > * {
+  margin: 5px 30px 0px;
+}
+
+#header .commandDiv {
+  position: relative;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+#header .commandInput {
+  align-self: center;
+  min-width: 55vw;
+  max-width: 85vw;
+  position: absolute;
+  right: 50%;
+  transform: translate(50%, 0%);
+  margin-top: -10px auto 10px auto;
+}
+
+#header .generate {
+  float: right;
+  margin: 0 5vw 0 0;
+}
