@@ -3,6 +3,7 @@ import { InlineIcon } from '@iconify/react';
 import githubOutlined from '@iconify/icons-ant-design/github-outlined';
 import ThemedLink from './themed-link';
 import { makeStyles, Theme, createStyles } from '@material-ui/core';
+import Card from '@material-ui/core/Card';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -21,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) =>
       }
     },
     leftGap: {
-      flexGrow: 9
+      flexGrow: 10
     }
   })
 )
@@ -29,13 +30,13 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function Footer() {
   const classes = useStyles()
   return (
-    <div className={classes.root}>
+    <Card className={classes.root}>
       <div className={classes.leftGap} />
       <div className={classes.linkContainer}>
         <ThemedLink href="https://github.com/pjozsef/word-generator">
           Fork me on <InlineIcon icon={githubOutlined} height={32} />
         </ThemedLink>
       </div>
-    </div>
+    </Card>
   )
 }
