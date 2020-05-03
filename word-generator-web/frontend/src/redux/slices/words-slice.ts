@@ -1,14 +1,14 @@
-import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
 import generateWord from '../async/generate-word'
 
-type ResultState = {
+export type WordsState = {
   current: string[],
   history: string[]
 }
 
 const { reducer } = createSlice({
   name: 'words',
-  initialState: { current: [], history: [] } as ResultState,
+  initialState: { current: [], history: [] } as WordsState,
   reducers: {},
   extraReducers: builder => {
     builder.addCase(generateWord.fulfilled, (state, action) => {

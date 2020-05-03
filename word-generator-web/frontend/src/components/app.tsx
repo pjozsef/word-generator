@@ -16,21 +16,16 @@ type MappedDispatch = {
 type Props = MappedProps & MappedDispatch
 
 export function App(props: Props) {
-  const { command, onType, generateWord, requests } = props
+  const { command, onType, generateWord, requests, words } = props
   const { generate } = requests
   return (
     <div className="app">
       <Header command={command} onType={onType} generateWord={generateWord} isFetching={generate} />
-      <Main />
+      <Main words={words}/>
       <Footer />
     </div>
   )
 }
-
-//<DebounceInput
-// value={command}
-// debounceTimeout={500}
-// onChange={props.onType} />
 
 const mapStateToProps = (state: AppState): MappedProps => state
 
