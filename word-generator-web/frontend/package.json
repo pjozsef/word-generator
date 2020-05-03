@@ -2,6 +2,7 @@
   "name": "word-generator-frontend",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:8080",
   "dependencies": {
     "@iconify/types": "^1.0.2",
     "@material-ui/core": "^4.9.12",
@@ -18,6 +19,7 @@
     "@types/react-redux": "^7.1.7",
     "@types/redux-persist": "^4.3.1",
     "@types/redux-thunk": "^2.1.0",
+    "axios": "^0.19.2",
     "jss": "^10.1.1",
     "lodash": "^4.17.15",
     "react": "^16.13.1",

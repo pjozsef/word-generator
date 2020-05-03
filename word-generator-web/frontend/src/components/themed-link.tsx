@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles, createStyles, useTheme, Theme } from '@material-ui/core/styles';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 
 type Props = {
     href: string,

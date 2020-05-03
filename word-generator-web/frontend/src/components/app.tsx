@@ -6,7 +6,7 @@ import { AppState } from '../redux/app-state';
 import Header from './header';
 import Main from './main';
 import Footer from './footer';
-import generateWord from '../redux/async/generateWord'
+import generateWord from '../redux/async/generate-word';
 
 type MappedProps = AppState
 type MappedDispatch = {
@@ -16,10 +16,11 @@ type MappedDispatch = {
 type Props = MappedProps & MappedDispatch
 
 export function App(props: Props) {
-  const { command, onType, generateWord } = props
+  const { command, onType, generateWord, requests } = props
+  const { generate } = requests
   return (
     <div className="app">
-      <Header command={command} onType={onType} generateWord={generateWord} />
+      <Header command={command} onType={onType} generateWord={generateWord} isFetching={generate} />
       <Main />
       <Footer />
     </div>

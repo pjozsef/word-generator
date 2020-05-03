@@ -23,13 +23,10 @@
   align-self: center;
   min-width: 55vw;
   max-width: 85vw;
-  position: absolute;
-  right: 50%;
-  transform: translate(50%, 0%);
   margin-top: -10px auto 10px auto;
 }
 
 #header .generate {
-  float: right;
+  display: inline-block;
   margin: 0 5vw 0 0;
 }
