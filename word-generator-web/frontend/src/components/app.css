@@ -1,7 +1,6 @@
 @import "../style/constants.css";
 
 .app {
-  background-color: gray;
   display: flex;
   flex-flow: column nowrap;
   height: 100vh;
