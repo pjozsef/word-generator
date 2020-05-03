@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles, Theme, createStyles, useTheme } from '@material-ui/core';
+import { makeStyles, Theme, createStyles } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import { WordsState } from '../redux/slices/words-slice';
 

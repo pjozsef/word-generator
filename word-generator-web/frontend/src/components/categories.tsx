@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles, Theme, createStyles, useTheme, Tabs } from '@material-ui/core';
+import { makeStyles, Theme, createStyles, Tabs } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import Tab from '@material-ui/core/Tab';
 
@@ -27,7 +27,6 @@ type Props = {
 
 export default function Categories(props: Props) {
     const classes = useStyles()
-    const theme = useTheme()
     return (
         <Card className={classes.root}>
         <Card className={classes.tabCard}>

@@ -7,12 +7,14 @@ import Header from './header';
 import Main from './main';
 import Footer from './footer';
 import generateWord from '../redux/async/generate-word';
+import { addCategory, updateCategory, deleteCategory, CategoryActions } from '../redux/slices/categories-slice';
 
 type MappedProps = AppState
 type MappedDispatch = {
-  onType: (event: React.ChangeEvent<HTMLInputElement>) => void,
-  generateWord: ()=> void
-}
+  onType: (event: React.ChangeEvent<HTMLInputElement>) => void
+  generateWord: () => void
+} & CategoryActions
+
 type Props = MappedProps & MappedDispatch
 
 export function App(props: Props) {
@@ -21,7 +23,7 @@ export function App(props: Props) {
   return (
     <div className="app">
       <Header command={command} onType={onType} generateWord={generateWord} isFetching={generate} />
-      <Main words={words}/>
+      <Main words={words} />
       <Footer />
     </div>
   )
@@ -30,10 +32,11 @@ export function App(props: Props) {
 const mapStateToProps = (state: AppState): MappedProps => state
 
 const mapDispatchToProps = (dispatch: any): MappedDispatch => ({
-  onType: (event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(updateCommand((event.target as HTMLInputElement).value))
-  },
-  generateWord: () => dispatch(generateWord())
+  onType: (event: React.ChangeEvent<HTMLInputElement>) => dispatch(updateCommand((event.target as HTMLInputElement).value)),
+  generateWord: () => dispatch(generateWord()),
+  addCategory: (name: string) => dispatch(addCategory(name)),
+  updateCategory: (category: {name: string, value: string}) => dispatch(updateCategory(category)),
+  deleteCategory: (name: string) => dispatch(deleteCategory(name)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

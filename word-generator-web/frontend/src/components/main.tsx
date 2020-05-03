@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles, Theme, createStyles, useTheme } from '@material-ui/core';
+import { makeStyles, Theme, createStyles } from '@material-ui/core';
 import { WordsState } from '../redux/slices/words-slice';
 import Words from './words';
 import Categories from './categories';
@@ -29,7 +29,6 @@ type Props = {
 export default function Main(props: Props) {
   const { words } = props
   const classes = useStyles()
-  const theme = useTheme()
 
   return (
     <div id="main" className={classes.root}>
