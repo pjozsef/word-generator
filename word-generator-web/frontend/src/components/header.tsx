@@ -37,14 +37,15 @@ const useStyle = makeStyles((theme: Theme) =>
             display: 'flex',
             flexFlow: 'column nowrap',
             justifyContent: 'space-around',
-            alignItems: 'stretch'
+            alignItems: 'stretch',
+            padding: theme.spacing(3,4)
         },
         h1: {
-            margin: theme.spacing(3, 4, 1)
+            margin: theme.spacing(0, 0, 1)
         },
         inputDiv: {
             display: 'flex',
-            margin: theme.spacing(3, 0, 4),
+            margin: theme.spacing(3, 0, 0),
             '& > *': {
                 margin: theme.spacing(0, 1)
             }
@@ -58,7 +59,7 @@ const useStyle = makeStyles((theme: Theme) =>
         generateButtonContainer: {
             display: 'flex',
             flexGrow: 2,
-            flexBasis: 2,
+            flexBasis: 1,
         },
         generateButton: {
             margin: 'auto'
