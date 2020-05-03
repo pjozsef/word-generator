@@ -5,7 +5,7 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class GenerateWordDto(
     val expression: String,
-    val mappings: Map<String, List<String>>,
+    val mappings: Map<String, List<String>> = mapOf(),
     val times: Int = 1,
     val rootExpression: String? = null,
     val seed: String = random()
