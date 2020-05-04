@@ -7,7 +7,7 @@ import Header from './header';
 import Main from './main';
 import Footer from './footer';
 import generateWord from '../redux/async/generate-word';
-import { addCategory, updateCategory, deleteCategory, CategoryActions } from '../redux/slices/categories-slice';
+import { addCategory, updateCategory, deleteCategory, CategoryActions, Category, selectCategory, renameCategory } from '../redux/slices/categories-slice';
 
 type MappedProps = AppState
 type MappedDispatch = {
@@ -23,7 +23,7 @@ export function App(props: Props) {
   return (
     <div className="app">
       <Header command={command} onType={onType} generateWord={generateWord} isFetching={generate} />
-      <Main words={words} />
+      <Main words={words} categoryActions={props} categoriesState={props.categories} />
       <Footer />
     </div>
   )
@@ -35,8 +35,10 @@ const mapDispatchToProps = (dispatch: any): MappedDispatch => ({
   onType: (event: React.ChangeEvent<HTMLInputElement>) => dispatch(updateCommand((event.target as HTMLInputElement).value)),
   generateWord: () => dispatch(generateWord()),
   addCategory: (name: string) => dispatch(addCategory(name)),
-  updateCategory: (category: {name: string, value: string}) => dispatch(updateCategory(category)),
-  deleteCategory: (name: string) => dispatch(deleteCategory(name)),
+  updateCategory: (payload: { index: number, value: string }) => dispatch(updateCategory(payload)),
+  renameCategory: (payload: { index: number, name: string }) => dispatch(renameCategory(payload)),
+  deleteCategory: (index: number) => dispatch(deleteCategory(index)),
+  selectCategory: (index: number) => dispatch(selectCategory(index))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
