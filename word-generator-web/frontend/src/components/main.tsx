@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme: Theme) =>
       '& .MuiCard-root': {
         color: theme.palette.primary.dark
       },
-      '& > *':{
+      '& > *': {
         margin: theme.spacing(5, 15)
       }
     }

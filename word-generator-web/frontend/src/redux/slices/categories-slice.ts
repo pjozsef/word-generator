@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import Categories from '../../components/categories'
 
 export type CategoryActions = {
   addCategory: (name: string) => void
