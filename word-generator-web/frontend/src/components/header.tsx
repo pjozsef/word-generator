@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import TextField from '@material-ui/core/TextField';
-import { Button, makeStyles, Theme, createStyles } from '@material-ui/core';
+import { Button, makeStyles, Theme, createStyles, IconButton, Dialog, DialogTitle, DialogContent } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import { RequestStatus } from '../redux/slices/requests-slice';
-import { InlineIcon } from '@iconify/react';
+import { InlineIcon, Icon } from '@iconify/react';
 import Rotate from './rotate';
 import hourglassOutlined from '@iconify/icons-ant-design/hourglass-outlined';
+import infoCircleOutlined from '@iconify/icons-ant-design/info-circle-outlined';
+import HelpContent from './help-content';
 
 type Props = {
     command: string,
@@ -30,6 +32,14 @@ const renderButton = (props: Props, classes: Record<"spinner" | "generateButton"
         </div>
 }
 
+const renderHelpButton = (setHelpOpen: (open: boolean) => void) => {
+    return <span>
+        <IconButton size="medium" color="secondary" component="span" onClick={() => setHelpOpen(true)}>
+            <Icon icon={infoCircleOutlined} />
+        </IconButton>
+    </span>
+}
+
 const useStyle = makeStyles((theme: Theme) =>
     createStyles({
         root: {
@@ -38,7 +48,7 @@ const useStyle = makeStyles((theme: Theme) =>
             flexFlow: 'column nowrap',
             justifyContent: 'space-around',
             alignItems: 'stretch',
-            padding: theme.spacing(3,4)
+            padding: theme.spacing(3, 4)
         },
         h1: {
             margin: theme.spacing(0, 0, 1)
@@ -67,12 +77,16 @@ const useStyle = makeStyles((theme: Theme) =>
         spinner: {
             color: theme.palette.secondary.main,
             filter: 'drop-shadow( 0px 0px 2px rgba(0, 0, 0, .7))'
+        },
+        darkText: {
+            color: theme.palette.primary.dark
         }
     })
 )
 
 export default function Header(props: Props) {
     const { command, onType } = props
+    const [helpOpen, setHelpOpen] = useState(false)
 
     const handleEnter = (event: React.KeyboardEvent) => {
         const { generateWord } = props
@@ -85,24 +99,33 @@ export default function Header(props: Props) {
     const classes = useStyle(props)
 
     return (
-        <Card className={classes.root}>
-            <h1 className={classes.h1}>Word generator</h1>
-            <div className={classes.inputDiv}>
-                <div className={classes.leftGap} />
-                <TextField
-                    className={classes.expessionInput}
-                    label="Expression"
-                    color="secondary"
-                    size="small"
-                    value={command}
-                    onChange={onType}
-                    onKeyPress={handleEnter}
-                    variant="outlined" />
+        <React.Fragment>
+            <Card className={classes.root}>
+                <h1 className={classes.h1}>Word generator{renderHelpButton(setHelpOpen)}</h1>
+                <div className={classes.inputDiv}>
+                    <div className={classes.leftGap} />
+                    <TextField
+                        className={classes.expessionInput}
+                        label="Expression"
+                        color="secondary"
+                        size="small"
+                        value={command}
+                        onChange={onType}
+                        onKeyPress={handleEnter}
+                        variant="outlined" />
 
-                <div className={classes.generateButtonContainer}>
-                    {renderButton(props, classes)}
+                    <div className={classes.generateButtonContainer}>
+                        {renderButton(props, classes)}
+                    </div>
                 </div>
-            </div>
-        </Card>
+            </Card>
+
+            <Dialog open={helpOpen} onClose={()=>setHelpOpen(false)}>
+                <DialogTitle className={classes.darkText}>Help</DialogTitle>
+                <DialogContent className={classes.darkText}>
+                    <HelpContent/>
+                </DialogContent>
+            </Dialog>
+        </React.Fragment>
     )
 }
