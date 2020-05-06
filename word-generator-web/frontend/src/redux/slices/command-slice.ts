@@ -1,15 +1,22 @@
-import {createSlice } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
+import { renameCategory } from './categories-slice'
 
-const {actions, reducer} = createSlice({
-    name: 'command',
-    initialState: '',
-    reducers: {
-      updateCommand(state, action) {
-        return action.payload
-      }
+const { actions, reducer } = createSlice({
+  name: 'command',
+  initialState: '',
+  reducers: {
+    updateCommand(state, action) {
+      return action.payload
     }
-  })
+  },
+  extraReducers: builder => {
+    builder.addCase(renameCategory, (state, action) => {
+      const { name, oldName } = action.payload
+      return state.replace(new RegExp('(?<=[\\*#]){'+oldName+'(?!\\w)', 'gi'), `{${name}`)
+    })
+  }
+})
 
-  export const { updateCommand } = actions
+export const { updateCommand } = actions
 
-  export default reducer
+export default reducer

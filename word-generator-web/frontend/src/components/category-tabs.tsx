@@ -85,7 +85,8 @@ export default function CategoryTabs(props: Props) {
 
     const editHandleRename = () => {
         const { index, editName: name } = editOpen
-        categoryActions.renameCategory({ index, name })
+        const oldName = categoriesState.all[index].name
+        categoryActions.renameCategory({ index, name, oldName })
         editHandleClose()
     }
 

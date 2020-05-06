@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 export type CategoryActions = {
   addCategory: (name: string) => void
   updateCategory: (payload: { index: number, value: string }) => void
-  renameCategory: (payload: { index: number, name: string }) => void
+  renameCategory: (payload: { index: number, name: string, oldName: string }) => void
   deleteCategory: (index: number) => void
   selectCategory: (index: number) => void
 }
@@ -50,7 +50,7 @@ const { actions, reducer } = createSlice({
         all
       }
     },
-    renameCategory(state, action: PayloadAction<{ index: number, name: string }>) {
+    renameCategory(state, action: PayloadAction<{ index: number, name: string, oldName: string }>) {
       const { all: oldCategories } = state
       const { index, name } = action.payload
       const { value } = state.all[index]

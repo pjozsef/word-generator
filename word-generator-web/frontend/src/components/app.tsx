@@ -36,7 +36,7 @@ const mapDispatchToProps = (dispatch: any): MappedDispatch => ({
   generateWord: () => dispatch(generateWord()),
   addCategory: (name: string) => dispatch(addCategory(name)),
   updateCategory: (payload: { index: number, value: string }) => dispatch(updateCategory(payload)),
-  renameCategory: (payload: { index: number, name: string }) => dispatch(renameCategory(payload)),
+  renameCategory: (payload: { index: number, name: string, oldName: string }) => dispatch(renameCategory(payload)),
   deleteCategory: (index: number) => dispatch(deleteCategory(index)),
   selectCategory: (index: number) => dispatch(selectCategory(index))
 })
