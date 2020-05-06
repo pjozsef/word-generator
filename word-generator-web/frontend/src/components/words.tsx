@@ -29,7 +29,7 @@ export default function Words(props: Props) {
     const classes = useStyles(props)
 
     return (
-        !!words.current[0] ? (
+        words.current.length>0 ? (
             <Card className={classes.root}>
                 <Card >
                     <div >
