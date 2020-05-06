@@ -12,7 +12,7 @@ const { actions, reducer } = createSlice({
   extraReducers: builder => {
     builder.addCase(renameCategory, (state, action) => {
       const { name, oldName } = action.payload
-      return state.replace(new RegExp('(?<=[\\*#]){'+oldName+'(?!\\w)', 'gi'), `{${name}`)
+      return state.replace(new RegExp('(?<=[*#]?[{+])'+oldName+'(?!\w)', 'gi'), `${name}`)
     })
   }
 })
