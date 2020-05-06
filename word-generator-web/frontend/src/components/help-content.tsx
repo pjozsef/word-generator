@@ -32,6 +32,8 @@ export default function HelpContent() {
         <p>Substitutes itself to a random word from the given category.<br />
            Example: #{"{categoryName}"}<br />
            Chooses a random word from the category 'categoryName'
+           Example: #{"{c1+c2+c3}"}<br />
+           Chooses a random word from either 'c1', 'c2' or 'c3' category.
         </p>
         <h5>Inline substitution rule</h5>
         <p>Similar to Substitution rule, but the possible choices are enumerated in the rule itself separated by a "|" character.<br />
@@ -44,10 +46,11 @@ export default function HelpContent() {
            It basically means that the generated words are similar but not necessarily the same as the input.<br />
            Markov chain rules can have a multitude of constraints:
            <ul>
-           <li>{"*{categoryName}"} - basic rule</li>
+           <li>{"*{categoryName}"} - basic rule for 'categoryName' category</li>
            <li>{"*{categoryName#3}"} - 3rd order markov chain. The larger the number, 
            the more similar the results will be to the input words. Usually a value between 2 and 3 works just fine.
            Numbers larger than the length of the input words don't have any effect.</li>
+           <li>{"*{cat1+cat2#3}"} - Supports merging multiple categories</li>
            <li>{"*{categoryName 4-8}"} - Results will be 4-8 characters long.</li>
            <li>{"*{categoryName 2-}"} - Results will be at least 2 characters long.</li>
            <li>{"*{categoryName -10}"} - Results will be at most 10 characters long.</li>
