@@ -5,7 +5,7 @@ import axios from 'axios'
 
 const removeEmptyLines = (mappings: object) => {
   return Object.entries(mappings).map(([key, value]) => {
-    const filtered = (value as string[]).map((v)=>v.trim()).filter((v) => v !== '')
+    const filtered = (value as string[]).map((v)=>v.trim()).filter((v) => v !== '').map((v)=>v.toLocaleLowerCase())
     return { [key]: filtered }
   }).reduce((curr, acc) => ({ ...acc, ...curr }), {})
 }
