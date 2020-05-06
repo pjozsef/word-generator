@@ -5,7 +5,7 @@ apply from: "$rootDir/release.gradle"
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    implementation 'com.github.pjozsef:markov-chain:1.1.1'
+    implementation 'com.github.pjozsef:markov-chain:1.2'
 
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0"
     testImplementation "io.kotlintest:kotlintest-runner-junit5:3.3.2"
