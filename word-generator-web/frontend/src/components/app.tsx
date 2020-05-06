@@ -7,7 +7,7 @@ import Header from './header';
 import Main from './main';
 import Footer from './footer';
 import generateWord from '../redux/async/generate-word';
-import { addCategory, updateCategory, deleteCategory, CategoryActions, Category, selectCategory, renameCategory } from '../redux/slices/categories-slice';
+import { addCategory, updateCategory, deleteCategory, CategoryActions, selectCategory, renameCategory } from '../redux/slices/categories-slice';
 
 type MappedProps = AppState
 type MappedDispatch = {
