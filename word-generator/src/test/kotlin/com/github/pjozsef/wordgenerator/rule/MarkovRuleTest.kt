@@ -5,7 +5,6 @@ import com.github.pjozsef.markovchain.Transition
 import com.github.pjozsef.markovchain.constraint.Constraints
 import com.github.pjozsef.markovchain.util.TransitionRule
 import com.github.pjozsef.markovchain.util.asDice
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import io.kotlintest.IsolationMode
@@ -17,7 +16,7 @@ import io.kotlintest.tables.row
 import java.util.*
 
 class MarkovRuleTest : FreeSpec({
-    "regex" - {
+    "regex matches" - {
         forall(
             row(
                 "with default prefix",
@@ -27,6 +26,21 @@ class MarkovRuleTest : FreeSpec({
             row(
                 "with order",
                 "*{rule#3}",
+                MarkovRule()
+            ),
+            row(
+                "with multiple rules",
+                "*{rule1+rule2}",
+                MarkovRule()
+            ),
+            row(
+                "with multiple rules and order",
+                "*{rule1+rule2#3}",
+                MarkovRule()
+            ),
+            row(
+                "with multiple rules and order and extra whitespace",
+                "*{ rule1 +   rule2 #3}",
                 MarkovRule()
             ),
             row(
@@ -57,7 +71,8 @@ class MarkovRuleTest : FreeSpec({
     }
     "evaluate" - {
         val mappings = mapOf(
-            "rule" to listOf("x", "y", "xy", "yy")
+            "rule" to listOf("x", "y", "xy", "yy"),
+            "rule2" to listOf("x2", "y2", "xy2", "yy2")
         )
         val random = mock<Random>()
         forall(
@@ -65,18 +80,21 @@ class MarkovRuleTest : FreeSpec({
                 "with simple rule",
                 "rule",
                 1,
+                mappings.getValue("rule"),
                 Constraints()
             ),
             row(
                 "with order",
                 "rule#4",
                 4,
+                mappings.getValue("rule"),
                 Constraints()
             ),
             row(
                 "with constraints",
                 "rule, 4-50, !hybrid, a**b",
                 1,
+                mappings.getValue("rule"),
                 Constraints(
                     minLength = 4,
                     maxLength = 50,
@@ -89,6 +107,7 @@ class MarkovRuleTest : FreeSpec({
                 "with order and constraints",
                 "rule#6, 4-50, !hybrid, a**b",
                 6,
+                mappings.getValue("rule"),
                 Constraints(
                     minLength = 4,
                     maxLength = 50,
@@ -101,6 +120,7 @@ class MarkovRuleTest : FreeSpec({
                 "ignores degenerate input",
                 "rule, 4-50,,    ,,   !hybrid, a**b",
                 1,
+                mappings.getValue("rule"),
                 Constraints(
                     minLength = 4,
                     maxLength = 50,
@@ -108,15 +128,23 @@ class MarkovRuleTest : FreeSpec({
                     endsWith = "b",
                     hybridPrefixPostfix = false
                 )
+            ),
+            row(
+                "respects multiple inputs",
+                " rule +rule2",
+                1,
+                mappings.getValue("rule") + mappings.getValue("rule2"),
+                Constraints()
             )
-        ) { test, input, order, constraints ->
+        ) { test, input, order, words, constraints ->
             test {
                 val success = listOf("success")
                 val markovChain = mock<MarkovChain> {
                     on { generate(order, 1, constraints) }.thenReturn(success)
                 }
                 val factory = mock<(Transition, String, Int) -> MarkovChain> {
-                    on { invoke(any(), eq("#"), eq(1_000_000)) }.thenReturn(markovChain)
+                    val transition = TransitionRule.fromWords(words, order, "#").asDice(random)
+                    on { invoke(eq(transition), eq("#"), eq(1_000_000)) }.thenReturn(markovChain)
                 }
                 MarkovRule(markovChainFactory = factory).evaluate(input, mappings, random) shouldBe success.first()
             }

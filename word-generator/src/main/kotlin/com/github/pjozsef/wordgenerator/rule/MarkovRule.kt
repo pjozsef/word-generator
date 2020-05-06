@@ -17,7 +17,7 @@ class MarkovRule(
     override val regex: Regex
         get() = _regex
 
-    private val ruleRegex = Regex("(?<rule>\\w+)(#(?<order>\\d+))?(,(?<constraints>.+))?")
+    private val ruleRegex = Regex("(?<rule>[\\w+\\s]+)(#(?<order>\\d+))?(,(?<constraints>.+))?")
 
     override fun evaluate(rule: String, mappings: Map<String, List<String>>, random: Random): String {
         return ruleRegex.matchEntire(rule)?.let {
@@ -35,7 +35,9 @@ class MarkovRule(
         random: Random
     ): MarkovChain {
         val key = matchResult.groups["rule"]?.value ?: error("Rule key not found")
-        val words = mappings.getValue(key)
+        val words = key.split("+")
+            .map(String::trim).filter(String::isNotBlank)
+            .flatMap { mappings.getValue(it) }
         val transition = TransitionRule.fromWords(words, order, "#").asDice(random)
         return markovChainFactory(transition, "#", 1_000_000)
     }
