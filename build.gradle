@@ -34,6 +34,7 @@ allprojects {
 
     compileKotlin {
         kotlinOptions.jvmTarget = "11"
+        kotlinOptions.freeCompilerArgs += '-Xopt-in=kotlin.time.ExperimentalTime'
     }
     compileTestKotlin {
         kotlinOptions.jvmTarget = "11"

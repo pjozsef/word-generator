@@ -1,10 +1,12 @@
 package com.github.pjozsef.wordgenerator.rule
 
+import com.github.benmanes.caffeine.cache.Caffeine
 import com.github.pjozsef.markovchain.MarkovChain
 import com.github.pjozsef.markovchain.Transition
 import com.github.pjozsef.markovchain.constraint.Constraints
 import com.github.pjozsef.markovchain.util.TransitionRule
 import com.github.pjozsef.markovchain.util.asDice
+import com.github.pjozsef.wordgenerator.cache.InMemoryCache
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import io.kotlintest.IsolationMode
@@ -16,6 +18,11 @@ import io.kotlintest.tables.row
 import java.util.*
 
 class MarkovRuleTest : FreeSpec({
+    val random = mock<Random>()
+    val mappings = mapOf(
+        "rule" to listOf("x", "y", "xy", "yy"),
+        "rule2" to listOf("x2", "y2", "xy2", "yy2")
+    )
     "regex matches" - {
         forall(
             row(
@@ -69,12 +76,25 @@ class MarkovRuleTest : FreeSpec({
             }
         }
     }
+    "uses cache" - {
+        val cache = InMemoryCache<List<String>, Transition>(Caffeine.newBuilder().build())
+        val rule = MarkovRule(cache = cache)
+
+        "gets transition from cache" {
+            val cachedResult = "a"
+            val cachedTransition = TransitionRule.fromWords(listOf(cachedResult), 1, "#").asDice(random)
+            cache[mappings.getValue("rule")] = cachedTransition
+            rule.evaluate("rule", mappings, random) shouldBe cachedResult
+        }
+
+        "sets transition in cache" {
+            rule.evaluate("rule#3", mappings, random)
+
+            val words = mappings.getValue("rule")
+            cache[words] shouldBe TransitionRule.fromWords(words, 3, "#").asDice(random)
+        }
+    }
     "evaluate" - {
-        val mappings = mapOf(
-            "rule" to listOf("x", "y", "xy", "yy"),
-            "rule2" to listOf("x2", "y2", "xy2", "yy2")
-        )
-        val random = mock<Random>()
         forall(
             row(
                 "with simple rule",

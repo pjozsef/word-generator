@@ -6,11 +6,13 @@ import com.github.pjozsef.markovchain.constraint.Constraints
 import com.github.pjozsef.markovchain.constraint.parseConstraint
 import com.github.pjozsef.markovchain.util.TransitionRule
 import com.github.pjozsef.markovchain.util.asDice
+import com.github.pjozsef.wordgenerator.cache.Cache
 import java.util.Random
 
 class MarkovRule(
     prefix: String = "\\*",
-    val markovChainFactory: (Transition, String, Int) -> MarkovChain = ::defaultFactory
+    val markovChainFactory: (Transition, String, Int) -> MarkovChain = ::defaultFactory,
+    private val cache: Cache<List<String>, Transition>? = null
 ) : Rule {
     private val _regex = Regex("$prefix\\{([^}]+)}")
 
@@ -38,7 +40,14 @@ class MarkovRule(
         val words = key.split("+")
             .map(String::trim).filter(String::isNotBlank)
             .flatMap { mappings.getValue(it) }
-        val transition = TransitionRule.fromWords(words, order, "#").asDice(random)
+
+        val transition = cache?.get(words) ?: TransitionRule
+            .fromWords(words, order, "#")
+            .asDice(random)
+            .also {
+                cache?.set(words, it)
+            }
+
         return markovChainFactory(transition, "#", 1_000_000)
     }
 

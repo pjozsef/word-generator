@@ -4,8 +4,10 @@ group = parent.group
 apply from: "$rootDir/release.gradle"
 
 dependencies {
+    api 'com.github.pjozsef:markov-chain:1.2'
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    implementation 'com.github.pjozsef:markov-chain:1.2'
+    implementation 'com.github.ben-manes.caffeine:caffeine:2.8.2'
 
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0"
     testImplementation "io.kotlintest:kotlintest-runner-junit5:3.3.2"
