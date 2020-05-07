@@ -5,6 +5,7 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import io.kotlintest.IsolationMode
+import io.kotlintest.assertSoftly
 import io.kotlintest.data.suspend.forall
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.FreeSpec
@@ -37,6 +38,35 @@ class SubstitutionRuleTest : FreeSpec({
         ) { test, input, rule ->
             test {
                 rule.regex.matches(input) shouldBe true
+            }
+        }
+    }
+    "nested rules" - {
+        "should only match inner substitution rule" {
+            val matches = SubstitutionRule().regex.findAll("#{rule#{embedded}}").toList()
+            assertSoftly {
+                matches.size shouldBe 1
+                matches.first().value shouldBe "#{embedded}"
+            }
+        }
+        "should not match" - {
+            forall(
+                row(
+                    "with embedded reference rule",
+                    "#{rule:{embedded}}"
+                ),
+                row(
+                    "with embedded markov rule",
+                    "#{rule*{embedded}}"
+                ),
+                row(
+                    "with embedded inline substitution rule",
+                    "#{rule#{v1|v2|v3}}"
+                )
+            ) { test, input ->
+                test {
+                    SubstitutionRule().regex.findAll(input).toList() shouldBe emptyList()
+                }
             }
         }
     }

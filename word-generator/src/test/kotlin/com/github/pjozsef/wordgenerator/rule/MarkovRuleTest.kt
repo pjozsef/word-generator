@@ -76,6 +76,35 @@ class MarkovRuleTest : FreeSpec({
             }
         }
     }
+    "nested rules" - {
+        "should only match inner markov rule" {
+            val matches = MarkovRule().regex.findAll("*{rule*{embedded}}").toList()
+            assertSoftly {
+                matches.size shouldBe 1
+                matches.first().value shouldBe "*{embedded}"
+            }
+        }
+        "should not match" - {
+            forall(
+                row(
+                    "with embedded reference rule",
+                    "*{rule:{embedded}}"
+                ),
+                row(
+                    "with embedded substitution rule",
+                    "*{rule#{embedded}}"
+                ),
+                row(
+                    "with embedded inline substitution rule",
+                    "*{rule#{v1|v2|v3}}"
+                )
+            ) { test, input ->
+                test {
+                    MarkovRule().regex.findAll(input).toList() shouldBe emptyList()
+                }
+            }
+        }
+    }
     "uses cache" - {
         val cache = InMemoryCache<OrderAndWords, Transition>(Caffeine.newBuilder().build())
         val rule = MarkovRule(cache = cache)

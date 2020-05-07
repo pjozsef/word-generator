@@ -7,7 +7,7 @@ class ReferenceRule(
 ) : Rule {
     private val refsKey = "refs"
 
-    private val _regex = Regex("$prefix\\{(\\w+)}")
+    private val _regex = Regex("$prefix\\{([\\w\\s]+)}")
 
     override val regex: Regex
         get() = _regex

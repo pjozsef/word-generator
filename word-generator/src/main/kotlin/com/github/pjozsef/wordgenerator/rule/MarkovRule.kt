@@ -16,7 +16,7 @@ class MarkovRule(
     val markovChainFactory: (Transition, String, Int) -> MarkovChain = ::defaultFactory,
     private val cache: Cache<OrderAndWords, Transition>? = null
 ) : Rule {
-    private val _regex = Regex("$prefix\\{([^}]+)}")
+    private val _regex = Regex("$prefix\\{([^{}]+)}")
 
     override val regex: Regex
         get() = _regex
