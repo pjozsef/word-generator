@@ -7,6 +7,8 @@ import com.github.pjozsef.markovchain.constraint.Constraints
 import com.github.pjozsef.markovchain.util.TransitionRule
 import com.github.pjozsef.markovchain.util.asDice
 import com.github.pjozsef.wordgenerator.cache.InMemoryCache
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import io.kotlintest.IsolationMode
@@ -135,6 +137,22 @@ class MarkovRuleTest : FreeSpec({
         }
     }
     "evaluate" - {
+        "when no result" - {
+            "returns constant" {
+                val factory = { _: Transition, _: String, _: Int ->
+                    mock<MarkovChain> {
+                        on { generate(any(), any(), any()) } doReturn listOf()
+                    }
+                }
+                MarkovRule(markovChainFactory = factory)
+                    .evaluate(
+                        "rule",
+                        mapOf("rule" to listOf("a")),
+                        random
+                    ) shouldBe "_NO_RESULT_"
+            }
+        }
+
         forall(
             row(
                 "with simple rule",

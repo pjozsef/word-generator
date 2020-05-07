@@ -29,7 +29,7 @@ class MarkovRule(
             val markovChain = getMarkovChain(it, order, mappings, random)
             val constraints = it.groups["constraints"]?.value?.let(::parseConstraint)
                 ?: Constraints()
-            markovChain.generate(order, 1, constraints).chooseRandom(random)
+            markovChain.generate(order, 1, constraints).chooseRandom(random) ?: "_NO_RESULT_"
         } ?: error("Unparsable rule: $rule")
     }
 
@@ -54,7 +54,7 @@ class MarkovRule(
         return markovChainFactory(transition, "#", 1_000_000)
     }
 
-    private fun <T> Collection<T>.chooseRandom(random: Random) = this.toList()[random.nextInt(size)]
+    private fun <T> Collection<T>.chooseRandom(random: Random) = this.toList().getOrNull(random.nextInt(size))
 
 }
 
