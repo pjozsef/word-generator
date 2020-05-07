@@ -1,8 +1,6 @@
 package com.github.pjozsef.wordgenerator.cache
 
 import com.github.benmanes.caffeine.cache.Caffeine
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import io.kotlintest.IsolationMode
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.FreeSpec
