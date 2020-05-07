@@ -1,7 +1,14 @@
 package com.github.pjozsef.wordgenerator.web
 
+import com.github.benmanes.caffeine.cache.Caffeine
+import com.github.pjozsef.markovchain.Transition
 import com.github.pjozsef.randomtree.io.readTreeFromString
+import com.github.pjozsef.wordgenerator.cache.InMemoryCache
 import com.github.pjozsef.wordgenerator.generateWord
+import com.github.pjozsef.wordgenerator.rule.InlineSubstitutionRule
+import com.github.pjozsef.wordgenerator.rule.MarkovRule
+import com.github.pjozsef.wordgenerator.rule.ReferenceRule
+import com.github.pjozsef.wordgenerator.rule.SubstitutionRule
 import com.ryanharter.ktor.moshi.moshi
 import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
 import io.ktor.application.call
@@ -17,10 +24,14 @@ import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import org.slf4j.event.Level
 import java.util.*
-import kotlin.time.ExperimentalTime
+import java.util.concurrent.TimeUnit
 import kotlin.time.measureTimedValue
 
-@OptIn(ExperimentalTime::class)
+val cache = InMemoryCache<List<String>, Transition>(Caffeine.newBuilder()
+    .maximumSize(20)
+    .expireAfterWrite(5, TimeUnit.MINUTES)
+    .build())
+
 fun main() {
     val server = embeddedServer(Netty, System.getProperty("server.port", "8080").toInt()) {
         routing {
@@ -39,14 +50,13 @@ fun main() {
                 add(Date::class.java, Rfc3339DateJsonAdapter())
             }
         }
-        install(CallLogging){
+        install(CallLogging) {
             level = Level.INFO
         }
     }
     server.start(wait = true)
 }
 
-@OptIn(ExperimentalTime::class)
 private fun generate(dto: GenerateWordDto) = with(dto) {
     val random = seed.toLong(36).let(::Random)
     measureTimedValue {
@@ -54,7 +64,13 @@ private fun generate(dto: GenerateWordDto) = with(dto) {
             generateWord(
                 expression(dto, random),
                 mappings,
-                random
+                random,
+                listOf(
+                    SubstitutionRule(),
+                    InlineSubstitutionRule(),
+                    MarkovRule(cache = cache),
+                    ReferenceRule()
+                )
             )
         }
     }
