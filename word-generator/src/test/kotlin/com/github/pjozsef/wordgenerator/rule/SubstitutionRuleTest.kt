@@ -44,6 +44,7 @@ class SubstitutionRuleTest : FreeSpec({
         val mappings = mapOf(
             "a" to listOf("x"),
             "b" to listOf("y"),
+            "rule with space" to listOf("withspace"),
             "multipleOptions" to listOf("0", "1", "2", "3")
         )
         val random = mock<Random>()
@@ -59,6 +60,12 @@ class SubstitutionRuleTest : FreeSpec({
                 "multipleOptions",
                 "3",
                 3
+            ),
+            row(
+                "returns value from rule with spaces",
+                "rule with space",
+                "withspace",
+                0
             ),
             row(
                 "substitution chosen from a composite rule",

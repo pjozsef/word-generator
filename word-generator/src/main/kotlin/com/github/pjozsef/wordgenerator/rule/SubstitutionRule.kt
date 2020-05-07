@@ -17,7 +17,7 @@ class SubstitutionRule(
         random: Random
     ): String {
         return rule.split("+").map {
-            it.replace(Regex("\\s+"), "")
+            it.trim()
         }.filter {
             it.isNotBlank()
         }.flatMap {
