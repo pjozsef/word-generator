@@ -41,7 +41,7 @@ fun main() {
 
                 val results = generate(dto).also {
                     log.info("Word generation of ${dto.times} word${if (dto.times > 1) "s" else ""} took ${it.duration.toLongMilliseconds()} millis.")
-                }.value
+                }.value.map(String::trim).filter(String::isNotBlank)
 
                 call.respond(GenerateWordResponseDto(results, dto.seed))
             }
