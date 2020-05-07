@@ -7,6 +7,7 @@ import com.github.pjozsef.wordgenerator.cache.InMemoryCache
 import com.github.pjozsef.wordgenerator.generateWord
 import com.github.pjozsef.wordgenerator.rule.InlineSubstitutionRule
 import com.github.pjozsef.wordgenerator.rule.MarkovRule
+import com.github.pjozsef.wordgenerator.rule.OrderAndWords
 import com.github.pjozsef.wordgenerator.rule.ReferenceRule
 import com.github.pjozsef.wordgenerator.rule.SubstitutionRule
 import com.ryanharter.ktor.moshi.moshi
@@ -27,7 +28,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.time.measureTimedValue
 
-val cache = InMemoryCache<List<String>, Transition>(Caffeine.newBuilder()
+val cache = InMemoryCache<OrderAndWords, Transition>(Caffeine.newBuilder()
     .maximumSize(20)
     .expireAfterWrite(5, TimeUnit.MINUTES)
     .build())

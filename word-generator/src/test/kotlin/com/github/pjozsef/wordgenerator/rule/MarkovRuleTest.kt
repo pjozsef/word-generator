@@ -77,13 +77,13 @@ class MarkovRuleTest : FreeSpec({
         }
     }
     "uses cache" - {
-        val cache = InMemoryCache<List<String>, Transition>(Caffeine.newBuilder().build())
+        val cache = InMemoryCache<OrderAndWords, Transition>(Caffeine.newBuilder().build())
         val rule = MarkovRule(cache = cache)
 
         "gets transition from cache" {
             val cachedResult = "a"
             val cachedTransition = TransitionRule.fromWords(listOf(cachedResult), 1, "#").asDice(random)
-            cache[mappings.getValue("rule")] = cachedTransition
+            cache[1 to mappings.getValue("rule")] = cachedTransition
             rule.evaluate("rule", mappings, random) shouldBe cachedResult
         }
 
@@ -91,7 +91,18 @@ class MarkovRuleTest : FreeSpec({
             rule.evaluate("rule#3", mappings, random)
 
             val words = mappings.getValue("rule")
-            cache[words] shouldBe TransitionRule.fromWords(words, 3, "#").asDice(random)
+            cache[3 to words] shouldBe TransitionRule.fromWords(words, 3, "#").asDice(random)
+        }
+
+        "caches depend on markov order" {
+            rule.evaluate("rule#3", mappings, random)
+            rule.evaluate("rule#2", mappings, random)
+            rule.evaluate("rule#1", mappings, random)
+
+            val expectedTransitions = (1..3).map { TransitionRule.fromWords(mappings.getValue("rule"), it, "#").asDice(random) }
+            val actualTransitions = (1..3).map { cache[it to mappings.getValue("rule")] }
+
+            actualTransitions shouldBe expectedTransitions
         }
     }
     "evaluate" - {

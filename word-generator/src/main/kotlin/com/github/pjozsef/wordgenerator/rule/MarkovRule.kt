@@ -9,10 +9,12 @@ import com.github.pjozsef.markovchain.util.asDice
 import com.github.pjozsef.wordgenerator.cache.Cache
 import java.util.Random
 
+typealias OrderAndWords = Pair<Int, List<String>>
+
 class MarkovRule(
     prefix: String = "\\*",
     val markovChainFactory: (Transition, String, Int) -> MarkovChain = ::defaultFactory,
-    private val cache: Cache<List<String>, Transition>? = null
+    private val cache: Cache<OrderAndWords, Transition>? = null
 ) : Rule {
     private val _regex = Regex("$prefix\\{([^}]+)}")
 
@@ -25,7 +27,8 @@ class MarkovRule(
         return ruleRegex.matchEntire(rule)?.let {
             val order = it.groups["order"]?.value?.toInt() ?: 1
             val markovChain = getMarkovChain(it, order, mappings, random)
-            val constraints = it.groups["constraints"]?.value?.let(::parseConstraint) ?: Constraints()
+            val constraints = it.groups["constraints"]?.value?.let(::parseConstraint)
+                ?: Constraints()
             markovChain.generate(order, 1, constraints).chooseRandom(random)
         } ?: error("Unparsable rule: $rule")
     }
@@ -41,11 +44,11 @@ class MarkovRule(
             .map(String::trim).filter(String::isNotBlank)
             .flatMap { mappings.getValue(it) }
 
-        val transition = cache?.get(words) ?: TransitionRule
+        val transition = cache?.get(order to words) ?: TransitionRule
             .fromWords(words, order, "#")
             .asDice(random)
             .also {
-                cache?.set(words, it)
+                cache?.set(order to words, it)
             }
 
         return markovChainFactory(transition, "#", 1_000_000)
