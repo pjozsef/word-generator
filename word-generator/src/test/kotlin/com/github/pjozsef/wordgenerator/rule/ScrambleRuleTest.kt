@@ -5,6 +5,7 @@ import com.nhaarman.mockitokotlin2.*
 import io.kotlintest.IsolationMode
 import io.kotlintest.assertSoftly
 import io.kotlintest.data.suspend.forall
+import io.kotlintest.matchers.doubles.plusOrMinus
 import io.kotlintest.matchers.numerics.shouldBeInRange
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.FreeSpec
@@ -57,6 +58,11 @@ class ScrambleRuleTest : FreeSpec({
             row(
                 "matches range with range maximum only",
                 "!{option1|option2,-30}",
+                ScrambleRule()
+            ),
+            row(
+                "matches range with multiple params",
+                "!{option1|option2,-30, 0.45}",
                 ScrambleRule()
             )
         ) { test, input, rule ->
@@ -193,6 +199,37 @@ class ScrambleRuleTest : FreeSpec({
                         it.length shouldBeInRange range
                     }
                 }
+            }
+        }
+
+        "with phonetics ratio" - {
+            forall(
+                row(0.5),
+                row(0.1),
+                row(0.1555),
+                row(0.9),
+                row(0.0),
+                row(1.0)
+            ) { distribution ->
+                "distribution matches ratio of $distribution" {
+                    val sampleSize = 10_000
+                    val delta = 0.015
+                    val vowels = generateSequence { "a" }.take(sampleSize).joinToString("")
+                    val consonants = generateSequence { "b" }.take(sampleSize).joinToString("")
+                    val input = vowels + consonants
+
+                    val result = ScrambleRule()
+                        .evaluate("$input, $distribution", mappings, Random())
+                        .take(sampleSize).toList()
+                    val vowelRatio = result.count { it == 'a' }.toDouble() / sampleSize
+                    val consonantRatio = result.count { it == 'b' }.toDouble() / sampleSize
+
+                    assertSoftly {
+                        vowelRatio shouldBe distribution.plusOrMinus(delta)
+                        consonantRatio shouldBe (1 - distribution).plusOrMinus(delta)
+                    }
+                }
+
             }
         }
     }
