@@ -9,7 +9,9 @@ import com.github.pjozsef.wordgenerator.rule.InlineSubstitutionRule
 import com.github.pjozsef.wordgenerator.rule.MarkovRule
 import com.github.pjozsef.wordgenerator.rule.OrderAndWords
 import com.github.pjozsef.wordgenerator.rule.ReferenceRule
+import com.github.pjozsef.wordgenerator.rule.ScrambleRule
 import com.github.pjozsef.wordgenerator.rule.SubstitutionRule
+import com.github.pjozsef.wordgenerator.util.Scrambler
 import com.ryanharter.ktor.moshi.moshi
 import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
 import io.ktor.application.call
@@ -70,7 +72,8 @@ private fun generate(dto: GenerateWordDto) = with(dto) {
                     SubstitutionRule(),
                     InlineSubstitutionRule(),
                     MarkovRule(cache = cache),
-                    ReferenceRule()
+                    ReferenceRule(),
+                    ScrambleRule(scrambler = Scrambler(random))
                 )
             )
         }
