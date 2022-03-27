@@ -95,7 +95,7 @@ class ScrambleRuleTest : FreeSpec({
                 )
             ) { test, input ->
                 test {
-                    InlineSubstitutionRule().regex.findAll(input).toList() shouldBe emptyList()
+                    ScrambleRule().regex.findAll(input).toList() shouldBe emptyList()
                 }
             }
         }

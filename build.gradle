@@ -3,12 +3,12 @@ version "git describe".execute().text.trim()
 
 buildscript {
     repositories {
-        mavenCentral()
         gradlePluginPortal()
+        mavenCentral()
         maven { url 'https://jitpack.io' }
     }
     dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.71"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.30"
         classpath 'gradle.plugin.com.github.jengelman.gradle.plugins:shadow:7.0.0'
         classpath "org.springframework.boot:spring-boot-gradle-plugin:2.2.0.RELEASE"
         classpath "org.jetbrains.kotlin:kotlin-allopen:1.3.50"
@@ -19,7 +19,7 @@ allprojects {
     apply plugin: 'kotlin'
 
     repositories {
-        jcenter()
+        mavenCentral()
         maven { url 'https://jitpack.io' }
     }
 
