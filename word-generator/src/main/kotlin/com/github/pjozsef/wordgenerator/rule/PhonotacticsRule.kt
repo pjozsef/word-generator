@@ -46,8 +46,8 @@ fun main() {
     val phonetics = """
         
     """.trimIndent()
-    val replacements = emptyList<Pair<Regex, String>>(
-    )
+    val phoneticGroupReplacements = emptyList<Pair<Regex, String>>()
+    val phoneticReplacements = emptyList<Pair<Regex, String>>()
 
 
 
@@ -96,14 +96,16 @@ fun main() {
 
 
     generateSequence(Unit) { }.map {
-        val phonotactics = generate(ruleTrees, fallOff, minLength, maxLength, random, showSyllables)
+        val phonotactics = generate(ruleTrees, fallOff, minLength, maxLength, random, showSyllables).let {
+            handleReplacements(it, phoneticGroupReplacements)
+        }
         val rawResult = substitute(phonotactics, phoneticsTrees)
         phonotactics to rawResult
     }.filter { (_, rawResult) ->
         filters.all { it(rawResult) }
     }.distinct().take(amount).map { (phonotactics, rawResult) ->
         PhonotacticsResult(
-            result = handleReplacements(rawResult, replacements),
+            result = handleReplacements(rawResult, phoneticReplacements),
             rawResult = rawResult,
             phonotactics = phonotactics
         )
